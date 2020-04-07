@@ -13,4 +13,4 @@ Git facilitates version control and collaboration. Uploading things on a Github 
 
 * Make a folder somewhere in your computer, where you'd like to store your project
 * Open Github Desktop: File &rarr; Add local repository
-* Upload some pictures or update a markdown file. Do your first commit!
+* Upload some pictures or update a markdown file. Do your first commit! (Github Desktop: fill out an intuitive summary &rarr; commit to master &rarr; push to origin)
