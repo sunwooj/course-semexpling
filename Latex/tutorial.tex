@@ -1,0 +1,360 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{natbib}
+% For typesetting Korean
+\usepackage{kotex}
+% For typesetting IPA phonetic symbols
+\usepackage{tipa}
+%For inserting pictures
+\usepackage{graphicx}
+%You can specify the path of the pictures if they are not in the same directory as your .tex file
+%\graphicspath{{images/}, {../../pictures/}}
+%For glossing linguistic examples
+\usepackage{linguex}
+%For inserting trees
+\usepackage{tikz-qtree}
+%For inserting hyperlinks and such
+\usepackage{hyperref}
+%For creating multi-columned texts
+\usepackage{multicol}
+%For creating OT tableaux widely used in phonology
+\usepackage{ot-tableau}
+%For additional math symbols
+\usepackage{stmaryrd}
+
+%Here's an example of how you might create a customized command for your own use -- this one creates a shortcut for denotation brackets in semantics
+\newcommand{\sem}[1]{\ensuremath{\llbracket#1\rrbracket}}
+
+%You can fine tune it further; here's one which provides pleasing renderings of phrases and sentences:
+\newcommand{\semp}[1]{\ensuremath{\llbracket\emph{\textrm{#1}}\rrbracket}}
+
+%Here's one with world variables (specifying extensional values):
+\newcommand{\semi}[1]{\ensuremath{\llbracket\emph{\textrm{#1}}\rrbracket}^{w}}
+
+
+
+\title{Experimental Linguistics \\ \LaTeX\ Tutorial}
+\author{Sunwoo Jeong}
+\date{April 2020}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+\subsection{What is \LaTeX?}
+\begin{itemize}
+    \item A typesetting program
+    \item Using it, we can make professional-looking documents (articles, thesis, etc.), slides, posters, etc.
+\end{itemize}
+
+\subsection{Why \LaTeX?}
+
+\begin{itemize}
+    \item The output it creates is .pdf, which is not user-dependent.
+    \item It is not needlessly/overly helpful.
+    \item It is one of the most widely accepted submission format for conference proceedings, journal papers, etc., not only in the field of linguistics, but also in other fields (math, philosophy, engineering, etc.)
+    \item In the long run, it will keep you sane during the editing/formatting process, because:
+        \begin{itemize}
+            \item Less decisions needed on your part
+            \item But if you want to fine-tune certain things, you can also have more control (formatting via commands!)
+        \end{itemize}
+\end{itemize}
+
+\subsection{What do we need to get it up and running?}
+
+\begin{itemize}
+    \item Using online LaTeX editor: Overleaf, ShareLaTeX, etc. 
+        \begin{itemize}
+            \item No download or system configuration necessary
+            \item Great when you are getting started
+        \end{itemize}
+    \item Compiling from your computer, using a LaTeX editor:
+        \begin{itemize}
+            \item Mac: TeXShop
+            \item Windows/PC: TeXMaker
+            \item Recommended for both: Visual Studio Code\footnote{Combine it with \url{https://github.com/James-Yu/LaTeX-Workshop/wiki}}, Sublime Text\footnote{A brief tutorial on how to set up your computer if you want to use Sublime Text as your LaTeX editor: \url{https://jj09.net/latex-with-sublimetext-and-skim/}}
+        \end{itemize}
+    You need to first have downloaded LaTeX distributions such as MikTeX (Windows) or MacTeX (Mac)
+    \item The input (source) file is .tex, the output file is .pdf.
+\end{itemize}
+
+
+
+\section{The basics: Creating a document}
+
+\noindent \textbf{Preamble}: calling in packages; configuring general formatting specifications; 
+    
+    \begin{verbatim}
+    \documentclass{article}
+    
+    \usepackage[utf8]{inputenc}
+    \usepackage{tipa}
+    \usepackage{linguex}
+    
+    \title{Experimental Linguistics \\ \LaTeX\ Tutorial}
+    \author{Sunwoo Jeong}
+    \date{September 2019}
+    \end{verbatim}
+    
+\noindent \textbf{Main text}: the actual document; commands are used to change formatting in specific places
+
+    \begin{verbatim}
+    \begin{document}
+    
+    \maketitle
+    
+    \section{Introduction}
+    Hello World!
+    
+    \end{document}
+    \end{verbatim}
+    
+\noindent Here are some commonly used font related commands:
+
+\begin{verbatim}
+    \textit{Ferdinand de Saussure} \\
+    \textbf{Ferdinand de Saussure} \\
+    \textsc{Ferdinand de Saussure} \\ 
+    \small{Ferdinand de Saussure} \\
+    \large{Ferdinand de Saussure} \\
+    \Large{Ferdinand de Saussure}
+\end{verbatim}
+
+\noindent When compiled, they would look as follows:
+
+\begin{quotation}
+    \noindent \textit{Ferdinand de Saussure} \\
+    \textbf{Ferdinand de Saussure} \\
+    \textsc{Ferdinand de Saussure} \\ 
+    \small{Ferdinand de Saussure} \\
+    \large{Ferdinand de Saussure} \\
+    \Large{Ferdinand de Saussure}
+\end{quotation}
+
+\noindent The basic units are sections, subsections, subsubsections, and paragraphs.
+
+
+
+\section{Glossing linguistic examples}
+
+\noindent You can use the \verb \ex. ~command. 
+
+\begin{verbatim}
+    \ex. Dies ist nicht die erste Glosse.\\
+    This is not the first gloss.
+\end{verbatim}
+
+\noindent LaTeX would render this as follows:
+
+\ex. Dies ist nicht die erste Glosse.\\
+    This is not the first gloss.
+
+\noindent For glossing, the package \verb linguex ~is helpful. Specify \verb \usepackage{linguex} ~at the preamble. (If compiling offline from your PC/laptop, first download the package.) To typeset Korean, also call in \verb \usepackage{kotex} ~at the preamble.
+
+\begin{verbatim}
+    \exg. 안녕하세요. 저는 문별입니다. \\
+    Hello-\textsc{hon}. I-\textsc{nom} Moonbyul-be-\textsc{dec}. \\
+    `Hello. I am Moonbyul.' 
+    
+    \exg. Annyeong-haseyo. jeo-nun Moonbyul-ipni-da. \\
+    Hello-\textsc{hon}. I-\textsc{nom} Moonbyul-be-\textsc{dec}. \\
+    `Hello. I am Sunwoo.'
+\end{verbatim}
+
+\noindent The package allows you to give a word-for-word gloss/translation.
+
+\exg. 안녕하세요. 저는 문별입니다. \\
+    Hello-\textsc{hon}. I-\textsc{nom} Moonbyul-be-\textsc{dec}. \\
+    `Hello. I am Moonbyul.' 
+    
+\exg. Annyeong-haseyo. jeo-nun Moonbyul-ipni-da. \\
+    Hello-\textsc{hon}. I-\textsc{nom} Moonbyul-be-\textsc{dec}. \\
+    `Hello. I am Moonbyul.'
+
+
+
+\section{Typesetting phonetic symbols}
+
+\noindent LaTeX can typeset IPA symbols beautifully, like so: [\textipa{m\ae \*r@T@n}]. \\ Specify \verb \usepackage{tipa} ~at the preamble. A summary of the commands for the IPA symbols can be found at: 
+
+\begin{quotation}
+\noindent 
+\url{https://jon.dehdari.org/tutorials/tipachart_mod.pdf}  
+\end{quotation}
+
+
+\noindent Here is an example: 
+
+\begin{verbatim}
+    Mina wants to ask Siri to play Ne-Yo's 2006 hit song,
+    \textit{So Sick} [\textipa{soU sIk}]. 
+    She forgets that the language setting is in English, 
+    and says: 시리야! 소식 [\textipa{s\super ho Cik\textcorner}] 
+    좀 틀어줘! What do you think happened?
+\end{verbatim}
+
+\noindent The key command to use is \verb \textipa{} ~as shown above.
+
+\begin{quotation}
+    Mina wants to ask Siri to play Ne-Yo's 2006 hit song,
+    \textit{So Sick} [\textipa{soUsIk}]. 
+    She forgets that the language setting is in English, 
+    and says: 시리야! 소식 [\textipa{s\super hoCik\textcorner}] 
+    좀 틀어줘! What do you think happened?
+\end{quotation}
+
+\noindent If you want to draw OT tableaux, consider also: \verb \usepackage{ot-tableau} \\ which helps you draw elegant tableaux, like so:
+
+\vspace{12pt}
+
+\begin{verbatim}
+    \begin{tableau}{c:c|c}
+    \inp{\ips{stap}} \const{*Complex} 
+    \const{Anchor-IO} \const{Contiguity-IO}
+    \cand{stap} \vio{*!} \vio{} \vio{}
+    \cand[\Optimal]{sap} \vio{} \vio{} \vio{*}
+    \cand{tap} \vio{} \vio{*!} \vio{}
+    \end{tableau}  
+\end{verbatim}
+
+
+\begin{tableau}{c:c|c}
+\inp{\ips{stap}} \const{*Complex} \const{Anchor-IO} \const{Contiguity-IO}
+\cand{stap} \vio{*!} \vio{} \vio{}
+\cand[\Optimal]{sap} \vio{} \vio{} \vio{*}
+\cand{tap} \vio{} \vio{*!} \vio{}
+\end{tableau}
+
+
+\section{Syntactic trees}
+
+\noindent Using LaTeX, you can draw and customize syntactic trees. \\ Specify \verb \usepackage{tikz-qtree} ~at the preamble and provide the tree structure in brackets. 
+
+\begin{multicols}{2}
+
+\begin{verbatim}
+    \Tree 
+    [.S [.DP I ] 
+        [.VP [.V am ] 
+            [.DP [.Det a ] 
+                [.NP linguist ] 
+            ] 
+        ] 
+    ]
+\end{verbatim}
+
+\Tree [.S [.DP I ] [.VP [.V am ] [.DP [.Det a ] [.NP linguist ] ] ] ]
+
+\end{multicols}
+
+\noindent The documentation for the package can be found here:
+
+\begin{quotation}
+\noindent 
+\url{http://ftp.ktug.org/tex-archive/graphics/pgf/contrib/tikz-qtree/tikz-qtree-manual.pdf}  
+\end{quotation}
+
+
+\noindent You can consult it to customize the tree in the way you like. For instance, here's a tree with a roof and without the vertical lines in the terminal nodes!
+
+\begin{multicols}{2}
+
+\begin{verbatim}
+    \begin{tikzpicture}
+    \tikzset{every tree
+    node/.style={align=center,
+    anchor=north}} 
+    \Tree [.S [.DP I ] 
+        [.VP [.V am ] 
+            [.DP \edge[roof];
+            {a linguist}
+            ] ] ] 
+    \end{tikzpicture}
+\end{verbatim}
+
+\begin{tikzpicture}
+\tikzset{every tree node/.style={align=center,anchor=north}}
+\Tree [.S [.DP\\I ] [.VP [.V\\am ] [.DP \edge[roof];
+            {a linguist} ] ] ]
+\end{tikzpicture}
+
+\end{multicols}
+
+
+
+
+\section{Logic and semantic symbols}
+
+\noindent Most symbols require a math environment, specified by \verb $ \verb $ ~or inside \verb \[ \verb \] brackets (depends also on which symbol/math package you called in at the preamble). Here's a comprehensive list of symbols and their corresponding LaTeX commands:
+
+\begin{quotation}
+\noindent 
+\url{http://tug.ctan.org/info/symbols/comprehensive/symbols-a4.pdf}  
+\end{quotation}
+
+\noindent For symbols that you use a lot, you can also create shortcut commands at the preamble, like so: 
+
+\begin{verbatim}
+    \usepackage{stmaryrd}
+    \newcommand{\sem}[1]
+    {\ensuremath{\llbracket#1\rrbracket}}
+\end{verbatim}
+
+\noindent For instance, the following two commands would result in the same formula.
+
+
+\begin{verbatim}
+    % Using the shortcut command
+    \sem{every} = $\lambda P \lambda Q. 
+    P \subseteq Q$
+    \% Without the shortcut
+    $\llbracket every \rrbracket = \lambda P \lambda Q. 
+    P \subseteq Q$
+\end{verbatim}
+
+\noindent As follows:
+
+\vspace{12pt}
+
+\sem{every} = $\lambda P \lambda Q. P \subseteq Q$
+    
+$\llbracket every \rrbracket = \lambda P \lambda Q. P \subseteq Q$
+
+\vspace{12pt}
+
+\noindent \textbf{Exercise} Create a command that italicizes and underlines its argument. (Name it itund or something short and easy.)
+
+
+\section{Citations and references}
+
+\noindent A bibliography management system that one can use with LaTeX (and more generally, supplemented by associated softwares) is BibTeX. Let's create our first .bib file and add some entries. Then you can call in your bibliography as follows:
+
+\begin{verbatim}
+    \bibliographystyle{chicago}
+    \bibliography{tutorial-bibliography.bib}
+\end{verbatim}
+
+\noindent You can easily change the bibliography style without having to edit each entry. In-text citations are done as follows:
+
+\begin{verbatim}
+   Here are some random papers: \cite{johnson2006}
+   and \cite{strand1996} and \cite{eckert2013}. 
+\end{verbatim}
+
+\begin{quotation}
+   \noindent    
+   Here are some random papers: \cite{johnson2006}
+   and \cite{strand1996} and \cite{eckert2013}. 
+\end{quotation}
+
+
+\section{Managing bibliography}
+
+I recommend using BibDesk or other bibliography systems that allow exportation to .bib.
+
+\bibliographystyle{chicago}
+\bibliography{tutorial-bibliography.bib}
+
+\end{document}
