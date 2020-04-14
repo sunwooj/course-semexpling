@@ -7,13 +7,24 @@ Day 1 will cover the basics of creating simple acceptability judgement or other 
 To create a new experiment, log in to your account in [IBEX Farm](http://spellout.net/ibexfarm/) and click on *Create a new experiment*.
 For a basic experiment, all you need to modify will be the javascript file under:
 
-``` sh
+``` 
     data_includes
 ```
 
-<blockquote>
+There are four main parts you want to keep in mind.
+
+* Define experimental trials and filler/practice trials, represent them as items variables
+* Define shuffleSequence and determine the general flow of the experiment
+* Define controller defaults
+* Add introductions and exits
+
+# Trials as item variables
+
+Commonly used controllers are `AcceptabilityJudgement` and `Question
+
+``` 
     data_includes
-</blockquote>
+```
 
 # IBEX
 
