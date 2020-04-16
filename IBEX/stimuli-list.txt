@@ -1,21 +1,21 @@
 ITEMS (each associated with 4 conditions)
 
-A maid polished every/each mirror (spotless).
-a. Each mirror was polished by a possibly different maid (until it was spot- less).
-b. All the mirrors were polished by the same maid until they were spotless.
+1. A maid polished every/each mirror (spotless).
+a. Each mirror was polished by a possibly different maid (until it was spotless).
+b. All the mirrors were polished by the same maid (until they were spotless).
 
 
-A helper dyed every/each shirt (blue).
+2. A helper dyed every/each shirt (blue).
 a. Each shirt was dyed by a possibly different helper (until it was the color blue).
 b. All the shirts were dyed by the same helper (until they were the color blue).
 
 
-A janitor dusted every/each bookcase (spotless).
+3. A janitor dusted every/each bookcase (spotless).
 a. Each bookcase was dusted by a possibly different janitor (until it was spotless).
 b. All the bookcases were dusted by the same janitor (until they were spotless).
 
 
-A gardener pruned every/each bush (short).
+4. A gardener pruned every/each bush (short).
 a. Each bush was pruned by a possibly different gardener (until it was short).
 b. All the bushes were pruned by the same gardener (until they were short).
 
@@ -38,3 +38,5 @@ Exactly five smokers brought cigars.
 a. More than ten smokers brought cigars.
 b. Less than ten smokers brought cigars.
 
+
+Main-every-yesres
