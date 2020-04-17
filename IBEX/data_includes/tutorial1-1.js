@@ -1,21 +1,21 @@
-// Section 2 in the tutorial
-
 var items = [
 
-// Transitions and counters
+// Transitions (not activated for now)
+// ["sep", "Separator", { }],
 
-["sep", "Separator", { }],
-
+// Section 3 in the tutorial:
+// Adding counter (for keeping track of Latin Square)
 ["setcounter", "__SetCounter__", { }],
 
-// Intro
+// Section 3 in the tutorial: Adding Intro
 ["introduction", "Message", { 
     html: ["div", 
-    ["p", "In this experiment... you will do blah blah. The experiment will take 10 mins."],
+    ["p", "In this experiment you will choose the more likely interpretation of a given sentence. The experiment will take 10 mins."],
     ["p", "실험 시작!"]] }
 ],
 
-// Main trials:
+// Sections 1 in the tutorial: 
+// Configuring main/filler trials
 // Item 1
 [["main-every-yesres", 1], "AcceptabilityJudgment", {
     s: "A maid polished every mirror spotless.",
@@ -65,6 +65,7 @@ var items = [
     as: ["Nobody but one boy enjoyed the show on the beach.", "Nobody enjoyed the show on the beach."]}
     ],
 
+// Filler2
 ["filler-good2-02", "AcceptabilityJudgment", {
     s: "Only three girls went to the movies.",
     as: ["Exactly two girls went to the movies.", "Exactly three girls went to the movies."]}
@@ -72,15 +73,20 @@ var items = [
 
 ];
 
-// Section 3 in the tutorial 
 
+// Section 4 in the tutorial: Configuring shuffleSequence
 var shuffleSequence = seq(
+    "setcounter",
     "introduction",
-    sepWith("sep", rshuffle(startsWith("main"), startsWith("fill"))));
+    rshuffle(startsWith("main"), startsWith("fill")));
+
+// If you want to use transitions/separators between trials, uncomment the code below and use this instead; also uncomment the relevant part in the beginning of the script specifying the separator
+//var shuffleSequence = seq(
+//     "introduction",
+//     sepWith("sep", rshuffle(startsWith("main"), startsWith("fill"))));
 
 
-//Section 4 in the tutorial: setting defaults
-
+// Section 2 in the tutorial: Setting defaults
 var defaults = [
     "AcceptabilityJudgment", {
         q: "Please choose the more likely interpretation."

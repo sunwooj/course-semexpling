@@ -1,19 +1,16 @@
-ITEMS (each associated with 4 conditions)
+ITEMS (each associated with 4 conditions) from Brasoveanu & Dotlacil (2015)
 
 1. A maid polished every/each mirror (spotless).
 a. Each mirror was polished by a possibly different maid (until it was spotless).
 b. All the mirrors were polished by the same maid (until they were spotless).
 
-
 2. A helper dyed every/each shirt (blue).
 a. Each shirt was dyed by a possibly different helper (until it was the color blue).
 b. All the shirts were dyed by the same helper (until they were the color blue).
 
-
 3. A janitor dusted every/each bookcase (spotless).
 a. Each bookcase was dusted by a possibly different janitor (until it was spotless).
 b. All the bookcases were dusted by the same janitor (until they were spotless).
-
 
 4. A gardener pruned every/each bush (short).
 a. Each bush was pruned by a possibly different gardener (until it was short).
@@ -39,4 +36,9 @@ a. More than ten smokers brought cigars.
 b. Less than ten smokers brought cigars.
 
 
-Main-every-yesres
+THE 4 CONDITIONS
+
+every-yesres: every, resultative 
+every-nores: every, non-resultative
+each-yesres: each, resultative
+each-nores: each, non-resultative
