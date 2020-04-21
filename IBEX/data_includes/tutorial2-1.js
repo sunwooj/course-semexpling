@@ -1,3 +1,4 @@
+// Day 2, section 2 of the tutorial
 // Define new controllers
 
 define_ibex_controller({
@@ -10,7 +11,7 @@ define_ibex_controller({
                 triggers: [1],
                 children: [
                     "Message", this.options,
-                    "Question", this.options,
+                    "AcceptabilityJudgment", this.options,
                 ]
             });
         }
@@ -29,7 +30,7 @@ define_ibex_controller({
                 triggers: [1],
                 children: [
                     "Message", this.options,
-                    "Form", this.options,
+                    "Question", this.options,
                 ]
             });
         }
@@ -53,81 +54,68 @@ var items = [
     }
 ],
 
-// Sections 1 in the tutorial: 
 // Configuring main/filler trials
-// Item 1
-[["main-every-yesres", 1], "AcceptabilityJudgment", {
-    s: "A maid polished every mirror spotless.",
-    as: ["Each mirror was polished by a possibly different maid until it was spotless.", "All the mirrors were polished by the same maid until they were spotless."]}
-    ],
+// Sample trials with pictures
+[["main-pall-ssome", 1], "MyController1",
+    {
+        html: "<center><img src='https://sunwooj.github.io/course-exsemprag/IBEX/images/sleep-all.png' alt='imagefile' width='480'></center>",
+        s: "Some animals are sleeping."
+    }
+],
 
-[["main-every-nores", 1], "AcceptabilityJudgment", {
-    s: "A maid polished every mirror.",
-    as: ["Each mirror was polished by a possibly different maid.", "All the mirrors were polished by the same maid."]}
-    ],
+[["main-pall-sall", 1], "MyController1",
+    {
+        html: "<center><img src='https://sunwooj.github.io/course-exsemprag/IBEX/images/sleep-all.png' alt='imagefile' width='480'></center>",
+        s: "All animals are sleeping."
+    }
+],
 
-[["main-each-yesres", 1], "AcceptabilityJudgment", {
-    s: "A maid polished each mirror spotless.",
-    as: ["Each mirror was polished by a possibly different maid until it was spotless.", "All the mirrors were polished by the same maid until they were spotless."]}
-    ],
+[["main-psome-ssome", 2], "MyController1",
+    {
+        html: "<center><img src='https://sunwooj.github.io/course-exsemprag/IBEX/images/sleep-some.png' alt='imagefile' width='480'></center>",
+        s: "Some animals are sleeping."
+    }
+],
 
-[["main-each-nores", 1], "AcceptabilityJudgment", {
-    s: "A maid polished each mirror.",
-    as: ["Each mirror was polished by a possibly different maid.", "All the mirrors were polished by the same maid."]}
-    ],
+[["main-psome-sall", 2], "MyController1",
+    {
+        html: "<center><img src='https://sunwooj.github.io/course-exsemprag/IBEX/images/sleep-some.png' alt='imagefile' width='480'></center>",
+        s: "All animals are sleeping."
+    }
+],
 
-// Item 2    
-[["main-every-yesres", 2], "AcceptabilityJudgment", {
-    s: "A helper dyed every shirt blue.", 
-    as: ["Each shirt was dyed by a possibly different helper until it was the color blue.", "All the shirts were dyed by the same helper until they were the color blue."]}
-    ],
+// A sample trial with an auditory stimulus
+["practice-audio", "MyController2",
+    {
+        html: "<center><audio controls><source src='http://hosting02.snu.ac.kr/~sunwooj/experiments/veridicality/painter-al-jul1-p4.wav' type='audio/wav'></audio></center>",
+        q: "Which is true?",
+        as: ["Is a painter", "Is not a painter"]
+    }
+],
 
-[["main-every-nores", 2], "AcceptabilityJudgment", {
-    s: "A helper dyed every shirt.", 
-    as: ["Each shirt was dyed by a possibly different helper.", "All the shirts were dyed by the same helper."]}
-    ],
-
-[["main-each-yesres", 2], "AcceptabilityJudgment", {
-    s: "A helper dyed each shirt blue.", 
-    as: ["Each shirt was dyed by a possibly different helper until it was the color blue.", "All the shirts were dyed by the same helper until they were the color blue."]}
-    ],
-
-[["main-each-nores", 2], "AcceptabilityJudgment", {
-    s: "A helper dyed each shirt.", 
-    as: ["Each shirt was dyed by a possibly different helper.", "All the shirts were dyed by the same helper."]}
-    ],
-
-// Fillers
-// Filler1
-["filler-good1-01", "AcceptabilityJudgment", {
-    s: "Only one boy enjoyed the show on the beach.",
-    as: ["Nobody but one boy enjoyed the show on the beach.", "Nobody enjoyed the show on the beach."]}
-    ],
-
-// Filler2
-["filler-good2-02", "AcceptabilityJudgment", {
-    s: "Only three girls went to the movies.",
-    as: ["Exactly two girls went to the movies.", "Exactly three girls went to the movies."]}
-    ]
+// A sample exit questionnaire with Form controller
+["exitqs", "Form", {
+    html: { include: "demographic-form.html" }
+    }
+]
 
 ];
 
 
-// Section 4 in the tutorial: Configuring shuffleSequence
+// Configuring shuffleSequence
 var shuffleSequence = seq(
     "setcounter",
     "introduction",
-    rshuffle(startsWith("main"), startsWith("fill")));
-
-// If you want to use transitions/separators between trials, uncomment the code below and use this instead; also uncomment the relevant part in the beginning of the script specifying the separator
-//var shuffleSequence = seq(
-//     "introduction",
-//     sepWith("sep", rshuffle(startsWith("main"), startsWith("fill"))));
+    rshuffle(startsWith("main")),
+    "practice-audio",
+    "exitqs");
 
 
-// Section 2 in the tutorial: Setting defaults
+
+// Setting defaults
 var defaults = [
-    "AcceptabilityJudgment", {
-        q: "Please choose the more likely interpretation."
+    "MyController1", {
+        q: "Is the sentence true or false?",
+        as: ["True", "False"]
     }
 ];
