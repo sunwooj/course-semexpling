@@ -219,8 +219,172 @@ To run your experiment, go to the repository of your experiment in [IBEX Farm](h
 
 
 
+# IBEX Tutorial: Day 2
+
+
+## 0. Getting started
+
+Today we will learn how we can add lengthier introductions, visual stimuli, auditory stimuli, and survey forms to your IBEX experiment.
+Go to [IBEX Farm](http://spellout.net/ibexfarm/) and click on *Create a new experiment*.
+Unlike the last time, where we only updated the javascript file under `data_includes`, we will modularize some of the experimental content and update the two following folders:
+
+``` 
+data_includes
+chunk_includes
+```
+
+First, create a new .js file which we will add to `data_includes`. Create the `items` variable as before.
+Now let us work on adding the following features, one-by-one, into our new experiment.
+
+* Adding an introduction with a consent form
+* Adding visual stimuli
+* Adding auditory stimuli
+* Adding a survey form
 
 
 
+## 1. Adding an introduction
+
+On our first day, we worked on creating a simple introductory slide for the experiment using inline html codes. 
+If you'd like a proper instruction slides with multiple components however, it would be better to create an external html file and call that in as your intro slide.
+You can do that by adding the following element in the `items` variable:
+
+```
+["introduction", "Form", {
+    html: { include: "tutorial-intro.html" }
+    }
+]
+```
+
+Then you just need to upload a separate `tutorial-intro.html` file under `chunk_includes` in the [IBEX Farm](http://spellout.net/ibexfarm/).
+HTML syntax may take some time getting used to, but for the most part, you can just tweak the template I shared (`tutorial-intro.html`). 
+If you'd like more info on HTML tags, you can do a quick tutorial in [Codecademy](https://www.codecademy.com/learn/learn-html) or consult the [HTML reference](https://www.w3schools.com/TAGS/default.ASP).
+
+The parts you would need to change: introductory texts between the paragraph tags `<p>` and `</p>`, and the link to your own consent form after `href`; you can upload your own consent form in your Github repository and link the address:
+
+```
+<a href="https://sunwooj.github.io/course-exsemprag/IBEX/example-consent.pdf" target="_blank">
+    Consent Form
+</a>
+```
+
+## 2. Adding visual stimuli
+
+Adding visual and auditory stimuli work in roughly the same way. You render these stimuli as a part of the HTML elements, and make the html script call in pictures and sounds from appropriate link addresses. In the context of experimental trials, you would most likely pair a given picture or sound file with a question or an experimental task. To be able to do this, it would be useful for us to create a new Controller by combining existing ones (since there exists no pre-existing Controller that does just that). Controllers like `Message` and `Form` are the ones that take in `html` as an obligatory arguments and display them. And as we saw in day 1, the `AcceptabilityJudgement` Controller enables us to ask a question with forced choice options after presenting a sentence. We will therefore combine the `Message` Controller with the `AcceptabilityJudgement` controller. The script needed to do that is provided below. (You can place the script in the main .js file, right before defining the `items` variable.)
+
+```
+define_ibex_controller({
+    name: "MyController1",
+    jqueryWidget: {
+        _init: function () {
+            this.options.transfer = null; // Remove 'click to continue message'. 
+            this.element.VBox({
+                options: this.options,
+                triggers: [1],
+                children: [
+                    "Message", this.options,
+                    "AcceptabilityJudgment", this.options,
+                ]
+            });
+        }
+    },
+    properties: {}
+});
+```
+
+You can give it an appropriate name like `MyController1`. Depending on the type of experimental task you are envisaging, you can combine any two Controllers and create a new one using the method outlined above. 
+
+You then specify the trial structure in the `items` variable in exactly the same way as you would any other Controller. Examples of elements in the `items` using the newly defined Controller is provided below:
 
 
+```
+[["main-pall-ssome", 1], "MyController1",
+    {
+        html: "<center><img src='https://sunwooj.github.io/course-exsemprag/IBEX/images/sleep-all.png' alt='imagefile' width='480'></center>",
+        s: "Some animals are sleeping."
+    }
+],
+
+[["main-pall-sall", 1], "MyController1",
+    {
+        html: "<center><img src='https://sunwooj.github.io/course-exsemprag/IBEX/images/sleep-all.png' alt='imagefile' width='480'></center>",
+        s: "All animals are sleeping."
+    }
+]
+```
+
+You can upload images in your Github repository in .png format, and add the link addresses to them after `src=`, inside single quotations. The experiment will find the appropriate pictures and display them during the trials. (The sample pictures and trials are inspired by our Barner et al. (2011) reading.)
+
+You'll notice that the `q` argument is missing; this is because we will create a separate `default` variable as questions and options will be identical across target trials; you can define the defaults in terms of the new Controller, like below:
+
+```
+var defaults = [
+    "MyController1", {
+        q: "Is the sentence true or false?",
+        as: ["True", "False"]
+    }
+];
+```
+
+
+## 3. Adding auditory stimuli
+
+Adding auditory stimuli will work in exactly the same way, with the following caveat: you cannot use Github repo links to call in sound files as html elements. Some web repos that will work: Dropbox and Google Drive, which auto-generate lengthy, random link addresses to uploaded sound files. If you want to avoid having to paste in lengthy link addresses that aren't transparent, you can sign up for a server/webhosting service (SNU offers this as a part of 스누인 지원 -- the yearly subscription costs 3만원). This allows you to have link addresses that are transparent, and maintain the file names of your audio files. A sample element that calls in a sound file uploaded to my SNU server is provided below:
+
+```
+["practice-audio", "MyController2",
+    {
+        html: "<center><audio controls><source src='http://hosting02.snu.ac.kr/~sunwooj/experiments/veridicality/painter-al-jul1-p4.wav' type='audio/wav'></audio></center>",
+        q: "Which is true?",
+        as: ["Is a painter", "Is not a painter"]
+    }
+]
+```
+
+Again, all you need to change in the html argument is the part after `src=`; you would put in appropriate link addresses to your sound files inside single quotations. Since the trial structure doesn't require displaying a target sentence in text, the above element uses yet another kind of Controller, `MyController2`, which combines `Message` and `Question` Controllers. See `tutorial2-1.js` for full documentation.
+
+
+## 4. Adding a survey form
+
+You might want to run an experiment that asks multiple survey-type questions in a given trial. Or, you might include an exit survey at the end of a standard, single-question-per-trial experiment. In these cases, using the `Form` Controller would be of help. Like the `Message` Controller, the `Form` Controller displays html arguments in HTML, but also dynamically records input responses to standard HTML elements like radio buttons, checkboxes, and text boxes. You can provide the html argument as inline codes, but once the questions get longer and complicated, providing them as a separate .html chunk would be more convenient. Just like the introduction, we will therefore create a separate html form, named `demographic-form.html`. The html file includes some frequently used input elements:
+
+```
+<p>What is your age?</p>
+     
+<input type='radio' name='age' value='20' /> 10-20대 
+<input type='radio' name='age' value='40' /> 30-40대 
+<input type='radio' name='age' value='60' /> 50-60대
+
+<p>What is your dialect?</p>
+
+<input type='radio' name='dialect' value='seoul' /> 서울
+<input type='radio' name='dialect' value='jl' /> 전라도
+<input type='radio' name='dialect' value='gn' /> 경상도
+
+<p>Check all that applies.</p>
+
+<input type='checkbox'/> rapper &nbsp;&nbsp; 
+<input type='checkbox'/> dancer &nbsp;&nbsp; 
+<input type='checkbox'/> director </p>
+
+<p>Any comments?</p>
+
+<input type='text'/>
+```
+
+Some brief remarks on each:
+
+* radio buttons: To keep track of which options belong to which question, designate each radio button the same `name` value. By default, the experiment will record the `value` of the option that was chosen; participants can only choose one of the provided radio buttons.
+* check boxes: Participants can check multiple checkboxes. By default, the experiment will record yes/no, depending on whether the given checkbox was checked or not.
+* Text boxes: By default, the experiment will record whatever text was typed in the text box.
+
+You can upload the `demographic-form.html` form under `chunk_includes` in the [IBEX Farm](http://spellout.net/ibexfarm/) and in the main .js file, include a survey trial using this form as follows:
+
+```
+["exitqs", "Form", {
+    html: { include: "demographic-form.html" }
+    }
+]
+```
+
+The rest is as in Day 1! Define the `shuffleSequence`, upload the .js under `data_includes`, and you should be good to go!!
