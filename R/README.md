@@ -1,8 +1,8 @@
-## R tutorials
+# R tutorials
 
 Links to relevant softwares and useful reference materials:
 
-# R
+## R
 
 * [Download R: Mac](https://cran.r-project.org/bin/macosx/)
 
@@ -14,15 +14,31 @@ Links to relevant softwares and useful reference materials:
 
 * [The Basics of Markdown](https://daringfireball.net/projects/markdown/basics)
 
-# Tutorial 1
+## Tutorial 1
 
 * Introduction to Tidyverse
 
 * Understanding what tidy data is
 
-* Data-wrangling and pre-processing using Excel and/or R
+* Some simple data pre-processing using Excel 
 
-* Basic explorations of data frames
+* Explorations of data frames
+
+## Tutorial 2
+
+* Data-wrangling and pre-processing using R
+
+* Deriving appropriate summaries and quantitative generalizations from data
+
+* Visualizing data
+
+* Analyzing data
+
+## Tutorial 3
+
+* Fitting regression models
+
+* Mixed effects (linear/logistic/ordinal) regression models
 
 
 
