@@ -2,7 +2,7 @@
 title: "R Tutorial I: Data summary and wrangling via Tidyverse"
 author: "Sunwoo Jeong"
 date: "2020/5/19"
-output: html_document
+output: rmarkdown::github_document
 ---
 
 ## Acknowledgement
