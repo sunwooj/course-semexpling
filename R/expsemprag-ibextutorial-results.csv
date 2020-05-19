@@ -1,13 +1,13 @@
-#,,,,,
-1589868357,bb0f7574c0757da55c1c83bb41048d61,main-every-nores-book,3,A janitor dusted every bookcase.,
-1589868357,bb0f7574c0757da55c1c83bb41048d61,main-every-nores-book,3,Please choose the more likely interpretation.,All the bookcases were dusted by the same janitor.
-1589868357,bb0f7574c0757da55c1c83bb41048d61,main-each-yesres-bush,4,A gardener pruned each bush short.,
-1589868357,bb0f7574c0757da55c1c83bb41048d61,main-each-yesres-bush,4,Please choose the more likely interpretation.,All the bushes were pruned by the same gardener until they were short.
-1589868357,bb0f7574c0757da55c1c83bb41048d61,filler-good2-02-movies,NULL,Only three girls went to the movies.,
-1589868357,bb0f7574c0757da55c1c83bb41048d61,filler-good2-02-movies,NULL,Please choose the more likely interpretation.,Exactly three girls went to the movies.
-1589868357,bb0f7574c0757da55c1c83bb41048d61,main-each-nores-mirror,1,A maid polished each mirror.,
-1589868357,bb0f7574c0757da55c1c83bb41048d61,main-each-nores-mirror,1,Please choose the more likely interpretation.,Each mirror was polished by a possibly different maid.
-1589868357,bb0f7574c0757da55c1c83bb41048d61,main-every-yesres-shirt,2,A helper dyed every shirt blue.,
-1589868357,bb0f7574c0757da55c1c83bb41048d61,main-every-yesres-shirt,2,Please choose the more likely interpretation.,All the shirts were dyed by the same helper until they were the color blue.
-1589868357,bb0f7574c0757da55c1c83bb41048d61,filler-good1-01-beach,NULL,Only one boy enjoyed the show on the beach.,
-1589868357,bb0f7574c0757da55c1c83bb41048d61,filler-good1-01-beach,NULL,Please choose the more likely interpretation.,Nobody but one boy enjoyed the show on the beach.
+subjectID,trialtype-quantifier-resultative-item,itemNum,stimuli,response
+bb0f7574c0757da55c1c83bb41048d61,main-every-nores-book,3,A janitor dusted every bookcase.,
+bb0f7574c0757da55c1c83bb41048d61,main-every-nores-book,3,Please choose the more likely interpretation.,All the bookcases were dusted by the same janitor.
+bb0f7574c0757da55c1c83bb41048d61,main-each-yesres-bush,4,A gardener pruned each bush short.,
+bb0f7574c0757da55c1c83bb41048d61,main-each-yesres-bush,4,Please choose the more likely interpretation.,All the bushes were pruned by the same gardener until they were short.
+bb0f7574c0757da55c1c83bb41048d61,filler-good2-02-movies,NULL,Only three girls went to the movies.,
+bb0f7574c0757da55c1c83bb41048d61,filler-good2-02-movies,NULL,Please choose the more likely interpretation.,Exactly three girls went to the movies.
+bb0f7574c0757da55c1c83bb41048d61,main-each-nores-mirror,1,A maid polished each mirror.,
+bb0f7574c0757da55c1c83bb41048d61,main-each-nores-mirror,1,Please choose the more likely interpretation.,Each mirror was polished by a possibly different maid.
+bb0f7574c0757da55c1c83bb41048d61,main-every-yesres-shirt,2,A helper dyed every shirt blue.,
+bb0f7574c0757da55c1c83bb41048d61,main-every-yesres-shirt,2,Please choose the more likely interpretation.,All the shirts were dyed by the same helper until they were the color blue.
+bb0f7574c0757da55c1c83bb41048d61,filler-good1-01-beach,NULL,Only one boy enjoyed the show on the beach.,
+bb0f7574c0757da55c1c83bb41048d61,filler-good1-01-beach,NULL,Please choose the more likely interpretation.,Nobody but one boy enjoyed the show on the beach.

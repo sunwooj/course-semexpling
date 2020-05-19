@@ -28,7 +28,7 @@ By the end of this tutorial, you will know:
 + How to do some stuff with tidy data
 + How to get your data to be tidy (In particular, how to transform non-tidy output from IBEX/Qualtrics/etc. into tidy format)
 
-This intro will describe a few concepts that you will need to know, using the famous `iris` dataset that comes with `ggplot2`, as well as the aggregated data set from assignments 1 and 3.
+This intro will describe a few concepts that you will need to know, using the famous `iris` dataset that comes with `ggplot2`, as well as a few sample linguistic data sets.
 
 ## Data frames
 
@@ -46,6 +46,9 @@ head(iris)
 ```{r}
 # fill me in with calls to the iris dataset that all return the same cell (third from the top, Petal Length).
 
+iris$Species
+
+summary(iris$Species)
 
 ```
 
@@ -69,6 +72,8 @@ setwd("/Users/sunwoojeong/Documents/ExpLing2019/R-tutorial/")
 ```{r}
 # fill me in with a command that could give us an overview of the data structure of datv and datc
 
+head(datv)
+summary(datv)
 
 ```
 
@@ -82,7 +87,7 @@ And if you know that data are formatted this way, then you can do amazing things
 
 "There’s a general advantage to picking one consistent way of storing data. If you have a consistent data structure, it’s easier to learn the tools that work with it because they have an underlying uniformity. There’s a specific advantage to placing variables in columns because it allows R’s vectorised nature to shine."
 
-`iris` is a tidy dataset. Each row is an observation of an individual iris, each column is a different variable. `dat` is also a tidy dataset.
+`iris` is a tidy dataset. Each row is an observation of an individual iris, each column is a different variable. `datv` is also a tidy dataset.
 
 ## Data pre-processing 
 
@@ -94,8 +99,8 @@ There exists many ways and many different tools to wrangle data so that it becom
 
 Different people have  different preferences. Some prefer doing the bulk of the work in Excel, others mostly in R. I tend to use a little bit of both if the need arises. While this is primarily an R tutorial, here are some basic functions in Excel that might come in handy.
 
-* Data &rarr; Text to Columns &rarr; Choose the appropriate delimiter (assign a sensible delimiter during the experiment implementation phase)
-* Select column &rarr; F5 &rarr; Special &rarr; Blanks/OK &rarr; Delete/Delete Sheet Rows
+* Data -> Text to Columns -> Choose the appropriate delimiter (assign a sensible delimiter during the experiment implementation phase)
+* Select column -> F5 -> Special -> Blanks/OK -> Delete/Delete Sheet Rows
 
 
 ## Data wrangling in R
@@ -137,6 +142,7 @@ or
 
 ```{r}
 round(mean(unique(iris$Petal.Length)), digits = 2)
+
 iris$Petal.Length %>% unique %>% mean %>% round(digits = 2)
 
 # indenting makes things even easier to read
@@ -150,7 +156,7 @@ This can be super helpful for writing strings of functions so that they are read
 
 We'll be doing a lot of piping of functions with multiple arguments later, and it will really help keep our syntax simple. 
 
-> **Exercise.** Rewrite these commands using pipes and check that they do the same thing! (Or at least produce the same output). Unpiped version:
+**Exercise.** Rewrite these commands using pipes and check that they do the same thing! (Or at least produce the same output). Unpiped version:
 
 ```{r}
 length(unique(iris$Species)) # number of species
@@ -163,7 +169,7 @@ Piped version:
 
 ```
 
-> **Exercise.** Using piped functions, figure out the mean of height and the mean of F1, F2. F3, and F0 from datv. Also figure out number of heights (which likely reduces to number of subjects).
+**Exercise.** Using piped functions, figure out the mean of height and the mean of F1, F2. F3, and F0 from datv. Also figure out number of heights (which likely reduces to number of subjects).
 
 ```{r}
 # fill in the piped version!
@@ -230,35 +236,29 @@ datv_av <-
           ht < 178) 
 ```
 
+What is it doing?
+
 An example using our IBEX results:
 
 ```{r}
-datv %>%
-  filter(ht > 164, 
-         ht < 178) 
+## load the IBEX data which have not been cleaned yet
+dati2 <- read.csv('expsemprag-ibextutorial-results.csv')
 
-datv_av <-
-  datv %>%
-    filter(ht > 164, 
-          ht < 178) 
+## Erasing rows where the value of the 'response' column is blank
+dati2[dati2==""] <- NA
+
+dati <-
+  dati2 %>%
+  filter(is.na(response) == 0) 
+
+#Alternatively:
+dati <-
+  dati2 %>%
+  filter(response != "NA") 
 ```
 
 
-**Exercise.** Filter out only the `iso` trial in the `wpos` condition, and 2nd vowel position (2) in the `vpos` condition, and save that as a separate data frame.
-
-```{r}
-
-
-```
-
-**Exercise.** Examine the duration column of datc. Do you notice any problems? Fix it using filtering.
-
-```{r}
-
-```
-
-
-There are also times when you want to add or remove *columns*. You might want to remove columns to simplify the dataset. There's not much to simplify here, but if you wanted to do that, the verb is `select`. 
+There are also times when you want to add or remove *columns*. You might want to remove columns to simplify the dataset. There's not much to simplify in `datv`, but if you wanted to do that, the verb is `select`. 
 
 ```{r}
 datv %>%
@@ -270,6 +270,14 @@ datv %>%
 # learn about this with ?select
 ```
 
+**Exercise.** Get rid of the redundant `stimuli` column in `dati`
+
+```{r}
+dati <-
+  dati %>%
+  select(-stimuli)
+```
+
 Perhaps more useful is *adding columns*. You might do this perhaps to compute some kind of derived variable. `mutate` is the verb for these situations - it allows you to add a column. Let's add a slope column to our datc dataset.
 
 ```{r}
@@ -279,11 +287,16 @@ datc_clean <- datc_clean %>%
 head(datc_clean$slope)
 ```
 
+Let's add a new response column, `response2`, to our dataset `dati`, which keeps track of whether the participant chose the wide scope or the narrow scope interpretation.
 ```{r}
-df %>%
-mutate(food = replace(food, str_detect(food, "fruit"), "fruit")) %>% 
-group_by(food) %>% 
-summarise(sold = sum(sold))
+dati$response <- as.character(dati$response)
+
+dati <-
+  dati %>%
+  mutate(response = replace(response, str_detect(response, "All"), "wide")) %>% 
+  mutate(response = replace(response, str_detect(response, "Each"), "narrow"))
+
+dati$response <- as.factor(dati$response)
 ```
 
 ## Standard psychological descriptives
@@ -316,10 +329,11 @@ datv_means
 
 These summary data are typically very useful for plotting. (To be covered in next class!)
 
-**Exercise.** Treat height as a factor and generate a summary of F0 mean according to height difference. Relate the summary back to our discussion of the Johnson reading. 
+**Exercise.** Treat height as a factor and generate a summary of F0 mean according to height difference. 
 
 ```{r}
 
 ```
 
-**Exercise.** In preparation for the next lab class, think of other summaries that may be useful in analyzing the data from assignment 1 and 3.
+
+**Exercise.** In preparation for the next lab class, think of other summaries that may be useful in analyzing the scope data from IBEX, and also the data from Jeong's factivity and prosody paper.
