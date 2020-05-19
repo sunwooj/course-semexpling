@@ -1,0 +1,7 @@
+,,trialtype,quantifier,resultative,item,itemNum,response
+1589868357,bb0f7574c0757da55c1c83bb41048d61,main,every,nores,book,3,All the bookcases were dusted by the same janitor.
+1589868357,bb0f7574c0757da55c1c83bb41048d61,main,each,yesres,bush,4,All the bushes were pruned by the same gardener until they were short.
+1589868357,bb0f7574c0757da55c1c83bb41048d61,filler,good2,2,movies,NULL,Exactly three girls went to the movies.
+1589868357,bb0f7574c0757da55c1c83bb41048d61,main,each,nores,mirror,1,Each mirror was polished by a possibly different maid.
+1589868357,bb0f7574c0757da55c1c83bb41048d61,main,every,yesres,shirt,2,All the shirts were dyed by the same helper until they were the color blue.
+1589868357,bb0f7574c0757da55c1c83bb41048d61,filler,good1,1,beach,NULL,Nobody but one boy enjoyed the show on the beach.

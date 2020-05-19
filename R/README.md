@@ -1,6 +1,6 @@
 ## R tutorials
 
-Set-ups
+Links to relevant softwares and useful reference materials:
 
 # R
 
@@ -13,6 +13,16 @@ Set-ups
 * [Cookbook for R](http://www.cookbook-r.com/)
 
 * [The Basics of Markdown](https://daringfireball.net/projects/markdown/basics)
+
+# Tutorial 1
+
+* Introduction to Tidyverse
+
+* Understanding what tidy data is
+
+* Data-wrangling and pre-processing using Excel and/or R
+
+* Basic explorations of data frames
 
 
 
