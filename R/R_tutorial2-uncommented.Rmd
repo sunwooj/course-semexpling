@@ -1,13 +1,13 @@
 ---
 title: "R Tutorial II: Data visualization via ggplot"
 author: "Sunwoo Jeong"
-date: "11/20/2019"
+date: "5/26/2020"
 output: html_document
 ---
 
-## Acknowledgement
+# Acknowledgement
 
-This tutorial is based on [Mike Frank's tutorial of Tidyverse](https://github.com/mcfrank/tidyverse-tutorial), which in turn is based on Hadley Wickham's [R for data scientists](http://r4ds.had.co.nz/). The latter resource contains extensive instructions on how to create effective visualizations of your experimental results, some of which we will cover today. Let's begin by calling in the data we will be working with (your assignments 1 and 3) and the necessary package (tidyverse, which includes ggplot2, which is commonly used for creating plots and visualizations in R).
+This tutorial is based on [Mike Frank's tutorial of Tidyverse](https://github.com/mcfrank/tidyverse-tutorial), which in turn is based on Hadley Wickham's [R for data scientists](http://r4ds.had.co.nz/). The latter resource contains extensive instructions on how to create effective visualizations of your experimental results, some of which we will cover today. Let's begin by calling in the data we will be working with (the Korean factivity/prosody data from my paper; we went over them in some detail during the lecture) and the necessary package (tidyverse, which includes ggplot2, which is commonly used for creating plots and visualizations in R).
 
 ```{r setup, include=FALSE}
 ## Call this in whenever you want to use associated packages such as ggplot2, tidyr, etc.
@@ -15,87 +15,128 @@ library(tidyverse)
 knitr::opts_chunk$set(echo = TRUE, cache=TRUE)
 
 ## The data
-# datv is now fixed
-datv <- read.csv('asmt1-korean-vowels.csv')
-datc <- read.csv('asmt1-korean-stops.csv')
-datg <- read.csv('asmt3-korean-ganong.csv')
+dat <- read.csv('veridicality-pilot-data-191127.csv')
+head(dat)
+
+## Inspect
+summary(dat$complementizer)
+summary(dat$prosody)
+summary(dat$item)
+```
+
+Some notes on the data:
+
+* The prosody column keeps track of the 4 prosody conditions used in the main trial:
+  * p1: emedded subject focus (ES)
+  * p2: embedded verb focus (EV)
+  * p3: complementizer focus (C)
+  * p4: main verb focus (MV)
+* The complementizer column keeps track of the complementizers and embedding structures (jul1, jul2, geo1, geo2, go) used in the main trial, and the control items (labelled as `ctr' instead)
+
+Do you see any problems that we should fix in the ways that the columns are set up and the relevant data are encoded?
+
+```{r}
+# Treat participant IDs as factors
+dat$subjectID <- as.factor(dat$subjectID)
+
+# Rename the complementizer variables that Excel messed up
+dat$complementizer <- as.character(dat$complementizer)
+dat$complementizer[dat$complementizer == "2-Jul"] <- "jul2"
+dat$complementizer[dat$complementizer == "1-Jul"] <- "jul1"
+dat$complementizer <- as.factor(dat$complementizer)
 ```
 
 <!-- ----------------------------------------------------------------------- -->
-# Goals and Introduction
+## Goals and Introduction
 
 By the end of this tutorial, you will know:
 
++ How to create useful data summaries
 + How to create plots and visualizations from data sets
 + How to create plots and visualizations from data summaries
 
-Take a quick look at how each data set look like:
+First, a review of functions, pipes, and summaries, as well as how to perform additional operations on the data set (e.g., adding/deleting columns). Using the `filter` command, create a new data frame which includes just the target trials, and among the target trials, just the ones involving the go/jul complementizers and all other prosodies than p3:
 
 ```{r}
-head(datv)
-head(datc)
-head(datg)
+# Create data frame for main trials/trials of interest
+dat_t <-
+  dat %>%
+  filter(complementizer != "ctr",
+         complementizer != "geo1",
+         complementizer != "geo2",
+         prosody != "p3")
+
+# Order verbs in intuitive pairs
+dat_t$verbtype <- factor(dat_t$verbtype, levels= c("al","moreu", "gieok", "ggameok", "mit", "alanae"))
+
+# Rename the prosody conditions in more intuitive ways
+dat_t$prosody <- as.character(dat_t$prosody)
+dat_t$prosody[dat_t$prosody == "p1"] <- "ES"
+dat_t$prosody[dat_t$prosody == "p2"] <- "EV"
+dat_t$prosody[dat_t$prosody == "p4"] <- "MV"
+dat_t$prosody <- as.factor(dat_t$prosody)
+
 ```
 
-# Visualizations from data sets
+## Summaries from data sets
+
+Let's now review some ways of generating useful summaries for the data sets. As mentioned in tutorial 1, the combination of `summarise` and `group_by` can be very powerful!
+
+```{r}
+# Examining the effect of verb type on veridicality ratings
+dat_s1 <- dat_t %>%
+  group_by(verbtype) %>%
+  summarise(meanVer = mean(veridicality))
+dat_s1
+
+# Examining the effect of verb type and prosody on veridicality ratings
+dat_s2 <- dat_t %>%
+  group_by(verbtype, prosody) %>%
+  summarise(meanVer = mean(veridicality))
+dat_s2
+
+# Examining the effect of verb type, prosody, and complementizer on veridicality ratings
+dat_s3 <- dat_t %>%
+  group_by(verbtype, prosody, complementizer) %>%
+  summarise(meanVer = mean(veridicality))
+dat_s3
+```
+
+Wow! Seems like this will come in handy later!
+
+## Visualizations from data sets
 
 What we will be working with is `ggplot2`. It is a plotting package that easily takes advantage of tidy data. ggplots have two important parts (there are of course more):
 
 + `aes` - the aesthetic mapping, or which data variables get mapped to which visual variables (x, y, color, symbol, etc.)
 + `geom` - the plotting objects that represent the data (points, lines, shapes, etc.)
 
-Let's try plottng the raw F0 data from assignment 1, with speaker height on the x-axis, F0 on the y-axis, and speaker gender represented as color coded dots.
+Let's try plottng the raw veridicality data, with verb type on the x-axis, veridicality on the y-axis, and prosody represented as colors. A common `geom` object is a boxplot, so we will use that. Type `?geom_boxplot` to check what it visualizes.
 
 ## The vowel data from assignment 1
 
 ```{r}
-datv %>%
-  ggplot(aes(x = ht, y = F0, col = sp_gender)) + 
-  geom_point() 
+dat_t %>%
+  ggplot(aes(x = verbtype, y = veridicality, col = prosody)) + 
+  geom_boxplot() 
 ```
-
-Any thoughts on the data? Are they in line with the argument made in Johnson (2006)? Suggestions on other modes of visualizations?
+We see that R is continuing to treat `veridiality` as a continous, numeric variables. Later, it might make more sense to treat them as (ordered) factors, but this will do for now. 
 
 
 The plot above made use of the following aesthetic mappings: x-axis, y-axis, and colors. If you want to plot additional factors, you can also use panels (`facet_grid`), as follows:
 
 ```{r}
-datv %>%
-  ggplot(aes(x = vtype, y = F1, col = sp_gender)) + 
-  geom_point() +
-  facet_grid(. ~ vpos)
+dat_t %>%
+  ggplot(aes(x = verbtype, y = veridicality, col = prosody)) + 
+  geom_boxplot() +
+  facet_grid(. ~ complementizer)
 
 
-datv %>%
-  ggplot(aes(x = ht, y = F0, col = sp_gender)) + 
-  geom_point() +
-  facet_grid(vtype ~ wpos)
+dat_t %>%
+  ggplot(aes(x = verbtype, y = veridicality)) + 
+  geom_boxplot() +
+  facet_grid(prosody ~ complementizer)
 ```
-
-What do the plots above visualize? Notice any interesting observations/generalizations, and/or problems of the experiment design?
-
-
-**Exercise 1**
-
-From datv, create a plot which maps wpos on panels, F0 on y-axis, and vtype on x-axis. (You may choose to color code speaker gender or not)
-
-```{r}
-datv %>%
-  ggplot(aes(x = vtype, y = F0, col = sp_gender)) + 
-  geom_point() +
-  facet_grid(. ~ wpos)
-
-```
-
-**Exercise 2**
-
-From datv, create a plot which maps wpos on x-axis, F1 on y-axis, and speaker height (ht) color-coded. 
-
-```{r}
-
-```
-
-Any generalizations or interesting observations?
 
 
 ## Saving plots
@@ -105,48 +146,40 @@ Here is an example:
 
 ```{r}
 # By default, saves the last plot
-ggsave("datv_ht1.pdf")
+ggsave("dat_t.pdf")
 
 # You can designate a variable to a particular plot, then save:
-p1 <- datv %>%
-  ggplot(aes(x = ht, y = F0, col = sp_gender)) + 
-  geom_point() 
+p1 <- dat_t %>%
+  ggplot(aes(x = verbtype, y = veridicality, col = prosody)) + 
+  geom_boxplot() 
 
 # The full specifications of parameters
-ggsave("datv_ht2.png", plot = p1, device = NULL, path = NULL,
+ggsave("dat_t.png", plot = p1, device = NULL, path = NULL,
   scale = 1, width = NA, height = NA, units = c("in", "cm", "mm"),
   dpi = 300, limitsize = TRUE)
 ```
 
 
-# Visualizations from data summaries
+## Visualizations from data summaries
 
-Oftentimes, counts and mappings of raw data alone do not provide useful visualizations of experimental results. Recall from the last lab that we can create useful summary tables of a data set using the functions `summarise` and `group_by`.
+Oftentimes, counts and mappings of raw data alone do not provide useful visualizations of experimental results. Recall that we were able to create useful summary tables of a data set using the functions `summarise` and `group_by`.
 
-What `summarise` does is to *apply a function* to a part of the dataset to create a new summary dataset. 
-
-The general syntax: `summarise` takes multiple `new_column_name = function_to_be_applied_to_data(data_column)` entries in a list. 
-
-Where these two verbs shine is in combination. Because `summarise` applies functions to columns in your *grouped data*, not just to the whole dataset!
-
-So we can group by age or condition or whatever else we want and then carry out the same procedure, and all of a sudden we are doing something extremely useful!
 
 ```{r}
-datv_means <- datv %>%
-  group_by(sp_gender, wpos) %>%
-  summarise(meanF0 = mean(F0))
-datv_means
+dat_s3 <- dat_t %>%
+  group_by(verbtype, prosody, complementizer) %>%
+  summarise(meanVer = mean(veridicality))
+dat_s3
 ```
 
 Let's plot the outputs of these summaries as follows:
 
 ```{r}
-datv_means %>%
-  ggplot(aes(x = wpos, y = meanF0, fill = sp_gender)) + 
-  geom_bar(position=position_dodge(.9), stat = "identity")
+dat_s3 %>%
+  ggplot(aes(x = prosody, y = meanVer, fill = prosody)) + 
+  geom_bar(stat = "identity") +
+  facet_grid(complementizer ~ verbtype) 
 ```
-
-What does the `position=` parameter specify? Figure it out by taking it out of the command and seeing what happens.
 
 
 
@@ -155,104 +188,127 @@ What does the `position=` parameter specify? Figure it out by taking it out of t
 Oftentimes, especially for bar plots, we would want to overlay error bars representing standard errors on top of mean values. We can easily create more sophisticated summary tables, using built-in functions:
 
 ```{r}
-datv_means2 <- datv %>%
-  group_by(sp_gender, wpos) %>%
-  summarise(meanF0 = mean(F0),
-            nF0 = n(),
-            sdF0 = sd(F0), 
-            seF0 = sdF0/sqrt(nF0))
-datv_means2
-```
-
-
-Let's now create plots with error bars:
-
-```{r}
-datv_means2 %>%
-  ggplot(aes(x = wpos, y = meanF0, fill = sp_gender)) + 
-  geom_bar(position=position_dodge(.9), stat = "identity") +
-  geom_errorbar(aes(ymin=meanF0-seF0, ymax=meanF0+seF0),
-                width=.2,                    # Width of the error bars
-                position=position_dodge(.9))
-```
-
-
-
-**Exercise 3** Generate a summary of datv which would enable you to examine whether and to what extent speaker height and speaker gender difference correlates with F1, F2, and F3 values, for each vowel. Include means and standard errors. Using the summary, generate a plot which maps height on the x-axis, mean F1 or F2 or F3 on the y-axis, and vowel types on separate facets/panels. You may also choose to color-code speaker gender.
-
-```{r}
-
-datv_means_ht <- datv %>%
-  group_by(sp_gender, ht, vtype) %>%
-  summarise(meanF1 = mean(F1),
-            meanF2 = mean(F2),
-            meanF3 = mean(F3),
+dat_s <- dat_t %>%
+  group_by(verbtype, complementizer, prosody) %>%
+  summarise(meanNat = mean(naturalness),
+            meanVer = mean(veridicality),
             n = n(),
-            sdF1 = sd(F1), 
-            sdF2 = sd(F2),
-            sdF3 = sd(F3),
-            seF1 = sdF1/sqrt(n),
-            seF2 = sdF2/sqrt(n),
-            seF3 = sdF3/sqrt(n))
-datv_means_ht
-
-datv_means_ht %>%
-  ggplot(aes(x = ht, y = meanF1, fill = sp_gender)) + 
-  geom_point(stat = "identity") +
-  geom_errorbar(aes(ymin=meanF1-seF1, ymax=meanF1+seF1),
-                width=.2,                    # Width of the error bars
-                position=position_dodge(.9)) +
-  facet_grid(. ~ vtype)
-
+            # Standard deviations
+            sdNat = sd(naturalness), 
+            sdVer = sd(veridicality),
+            # Standard errors
+            seNat = sdNat/sqrt(n),
+            seVer = sdVer/sqrt(n))
+dat_s
 ```
 
-**Exercise 4** Examine datc. What could be some useful things to summarize and plot? Discuss among groups. Then implement a few visualizations.
+
+Let's now create plots with error bars; before doing that, we will collapse different kinds of embedding structures, because they appear to be eliciting analogous results:
 
 ```{r}
-head(datc)
+# Combine jul1 and jul2 into jul
+dat_t$complementizer2 <- dat_t$complementizer
+dat_t$complementizer2 <- as.character(dat_t$complementizer2)
+dat_t$complementizer2[dat_t$complementizer2 == "jul1"] <- "jul"
+dat_t$complementizer2[dat_t$complementizer2 == "jul2"] <- "jul"
+dat_t$complementizer2 <- as.factor(dat_t$complementizer2)
 
-datc_means <- datc %>%
-  group_by(stop, wpos) %>%
-  summarise(meanF0 = mean(v1F0on),
+# Order complementizers in intuitive pairs
+dat_t$complementizer2 <- factor(dat_t$complementizer2, levels= c("jul","go"))
+
+# Re-do the summary
+dat_s <- dat_t %>%
+  group_by(verbtype, complementizer2, prosody) %>%
+  summarise(meanNat = mean(naturalness),
+            meanVer = mean(veridicality),
             n = n(),
-            sdF0 = sd(v1F0on), 
-            seF0 = sdF0/sqrt(n),
-            meanVOT = mean(VOT),
-            sdVOT = sd(VOT), 
-            seVOT = sdVOT/sqrt(n)
-            )
-datc_means
+            sdNat = sd(naturalness), 
+            sdVer = sd(veridicality),
+            seNat = sdNat/sqrt(n),
+            seVer = sdVer/sqrt(n))
+dat_s
 
-datc_means %>%
-  ggplot(aes(x = stop, y = meanF0, fill = wpos)) + 
+# Plot the data with error bars
+dat_s %>%
+  ggplot(aes(x = prosody, y = meanVer, fill = prosody)) + 
   geom_bar(stat = "identity") +
-  geom_errorbar(aes(ymin=meanF0-seF0, ymax=meanF0+seF0),
+  geom_errorbar(aes(ymin=meanVer-seVer, ymax=meanVer+seVer),
                 width=.2,                    # Width of the error bars
                 position=position_dodge(.9)) +
-  facet_grid(. ~ wpos)
-
+  facet_grid(complementizer2 ~ verbtype)
 ```
 
-# Making things pretty
+
+## Making things pretty
 
 The possibilities are endless! Below are a few basic settings. For ideas on color combinations, check this out: [http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/](http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/) If you are a fan of Wes Anderson movies, you can also check this out: [https://github.com/karthik/wesanderson](https://github.com/karthik/wesanderson)
 
 ```{r}
 # Basic
-datv_means %>%
-  ggplot(aes(x = wpos, y = meanF0, fill = sp_gender)) + 
-  geom_bar(position=position_dodge(.9), stat = "identity") + 
+p <- dat_s %>%
+  ggplot(aes(x = prosody, y = meanVer, fill = prosody)) + 
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin=meanVer-seVer, ymax=meanVer+seVer),
+                width=.2,                    # Width of the error bars
+                position=position_dodge(.9)) +
+  facet_grid(complementizer2 ~ verbtype) + 
   ggthemes::theme_few() + 
   ggthemes::scale_color_solarized() 
 
 # Wes Anderson
-install.packages("wesanderson")
+# install.packages("wesanderson")
 library(wesanderson)
 
-datv_means %>%
-  ggplot(aes(x = wpos, y = meanF0, fill = sp_gender)) + 
-  geom_bar(position=position_dodge(.9), stat = "identity") + 
-  ggthemes::theme_few() + 
-  scale_fill_manual(values = wes_palette("Royal1"))
+p <- dat_s %>%
+  ggplot(aes(x = prosody, y = meanVer, fill = prosody)) + 
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin=meanVer-seVer, ymax=meanVer+seVer),
+                width=.2,                    # Width of the error bars
+                position=position_dodge(.9)) +
+  facet_grid(complementizer2 ~ verbtype) + 
+  ggthemes::theme_few() +
+  scale_fill_manual(values = wes_palette("GrandBudapest2"))
 
+```
+
+
+## Putting things together
+
+Below are the final codes I used to create the visualizations:
+
+```{r}
+## Means for the controls that I got from conducting separate operations:
+true_base <- 5.74
+false_base <- 2.5
+
+p <- dat_s %>%
+  ggplot(aes(x = prosody, y = meanVer, fill = prosody)) + 
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin=meanVer-seVer, ymax=meanVer+seVer),
+                width=.2,                    # Width of the error bars
+                position=position_dodge(.9)) +
+  facet_grid(complementizer2 ~ verbtype) +
+  theme_bw() +
+  theme(axis.title.y=element_text(size=14), 
+        axis.title.x=element_blank()) + labs(y='Mean Veridicality Ratings') +
+  scale_fill_manual(values = c("#D55E00", "#009E73", "#56B4E9")) +
+  theme(legend.position="none") +
+  theme(strip.text.x = element_text(size = 10), strip.text.y = element_text(size = 10)) +
+  geom_hline(yintercept=true_base, linetype="dashed", 
+                color = "#F0E442", size=1.2) + 
+  geom_hline(yintercept=false_base, linetype="dashed", 
+                color = "#999999", size=1.2)
+```
+
+## Exercise I
+
+Include `geo` and plot the same things as above; any patterns?
+
+```{r}
+```
+
+## Exercise II
+
+Treat `veridicality` ratings as factors. Create bar plots that plot the proportion of times when participants chose each of the 7 options.
+```{r}
 ```
