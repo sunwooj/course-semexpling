@@ -39,6 +39,9 @@ Do you see any problems that we should fix in the ways that the columns are set 
 # Treat participant IDs as factors
 dat$subjectID <- as.factor(dat$subjectID)
 
+# Number of participants:
+dat$subjectID %>% unique %>% length
+
 # Rename the complementizer variables that Excel messed up
 dat$complementizer <- as.character(dat$complementizer)
 dat$complementizer[dat$complementizer == "2-Jul"] <- "jul2"
@@ -58,7 +61,7 @@ By the end of this tutorial, you will know:
 First, a review of functions, pipes, and summaries, as well as how to perform additional operations on the data set (e.g., adding/deleting columns). Using the `filter` command, create a new data frame which includes just the target trials, and among the target trials, just the ones involving the go/jul complementizers and all other prosodies than p3:
 
 ```{r}
-# Create data frame for main trials/trials of interest
+# Create data frame for main trials/trials of interest 
 dat_t <-
   dat %>%
   filter(complementizer != "ctr",
@@ -76,6 +79,9 @@ dat_t$prosody[dat_t$prosody == "p2"] <- "EV"
 dat_t$prosody[dat_t$prosody == "p4"] <- "MV"
 dat_t$prosody <- as.factor(dat_t$prosody)
 
+# Save cleaned data
+write.csv(dat_t, file = "veridicality-target-cleaned.csv")
+
 ```
 
 ## Summaries from data sets
@@ -84,7 +90,8 @@ Let's now review some ways of generating useful summaries for the data sets. As 
 
 ```{r}
 # Examining the effect of verb type on veridicality ratings
-dat_s1 <- dat_t %>%
+dat_s1 <- 
+  dat_t %>%
   group_by(verbtype) %>%
   summarise(meanVer = mean(veridicality))
 dat_s1
@@ -166,9 +173,11 @@ Oftentimes, counts and mappings of raw data alone do not provide useful visualiz
 
 
 ```{r}
-dat_s3 <- dat_t %>%
+dat_s3 <- 
+  dat_t %>%
   group_by(verbtype, prosody, complementizer) %>%
   summarise(meanVer = mean(veridicality))
+
 dat_s3
 ```
 
