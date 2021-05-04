@@ -1,17 +1,15 @@
 # IBEX Tutorial: Day 1
 
-Day 1 will cover the basics of creating simple acceptability judgement or other types of forced-choice task experiments. We will create a pilot experiment for our class project. For a comprehensive step-by step guide, please consult [Brian Dillon and Rodica Ivan's LSA tutorial](https://xlingumass.github.io/resources/LSA_Minicourse_DillonIvan.pdf). The [official IBEX manual](https://github.com/addrummond/ibex/blob/master/docs/manual.md) will also be of use.
+Day 1 will cover the basics of creating simple acceptability judgement or other types of forced-choice task experiments. We will do a mini-replication of experiment 1  reported in our reading, Brasoveanu & Dotlacil (2015). For a comprehensive step-by step guide, please consult [Brian Dillon and Rodica Ivan's LSA tutorial](https://xlingumass.github.io/resources/LSA_Minicourse_DillonIvan.pdf). The [official IBEX manual](https://github.com/addrummond/ibex/blob/master/docs/manual.md) will also be of use.
 
 ## 0. Getting started
 
-To create a new experiment, log in to your account in [IBEX Farm](http://spellout.net/ibexfarm/) and click on *Create a new experiment*. Or, log in to your an account in [PCIBEX Farm](https://farm.pcibex.net/) and click on *Empty project* under *Start a new project*.
+To create a new experiment, log in to your account in [IBEX Farm](http://spellout.net/ibexfarm/) and click on *Create a new experiment*.
 For a basic experiment, all you need to modify will be the javascript file under:
 
 ``` 
 data_includes
 ```
-
-(In the case of PCIBEX, the `main.js`.)
 
 You can download `examples_data.js` present under `data_includes` (it provides you with a basic template for a self-paced reading experiment including comprehension tasks) and work from there, or work from scratch, or work from another existing template that can execute tasks that are most similar to the experiment you have in mind. As a practice, let's try creating the main javascript file from scratch. Go to a code editor of your choice and open a new blank file. Save it in an appropriate directory and give it an intuitive name with the extension `.js`. Usually, working on this file will involve 4 parts.
 
@@ -37,12 +35,12 @@ We'll now fill in this empty matrix, first with a list of possible trials. The s
 ```
 
 * The first element: Again a matrix `[ ]`, in the case of target trials, consisting of:
-    + TrialType: Is it a target or filler/control trial? We will label each as `main` and `fill`. Control trials will be matching polar interrogatives without 
-    + TrialConditions: Which experimental condition is it? Let us posit 4 key conditions (2x2) depending on the presence of preposed negation and the position of the prosodic focus. Let's label each as follows:
-        + `PNQ-NPF`: subject, object, or verb focus (depends on the item which one will be included), preposed negation
-        + `PNQ-POLF`: polarity focus, preposed negation
-        + `PQ-NPF`: subject, object, or verb focus (depends on the item which one will be included), no preposed negation
-        + `PQ-POLF`: polarity focus, no preposed negation
+    + TrialType: Is it a target or filler/control trial? We will label each as `main` and `fill`
+    + TrialConditions: Which experimental condition is it? Recall that Brasoveanu & Dotlacil (2015) had 4 conditions from a 2x2 design (factor 1: resultative construction or not? / factor 2: every or each?). Let's label each as follows:
+        + `every-yesres`: every, resultative 
+        + `every-nores`: every, non-resultative
+        + `each-yesres`: each, resultative
+        + `each-nores`: each, non-resultative
     + ItemNum: Item number; 1, 2, 3, 4, etc.
 * The second element: `ControllerType`. Here you specify the type of Controller you want to use, which will implement the main task in the trial. Commonly used Controllers in offline experiments are `AcceptabilityJudgement` (often used for implementing naturalness rating tasks involving a series of sentences) and `Question` (forced choice tasks). Though the main task involved in the present experiment is a binary forced-choice task, it calls for not just a question/answer pair, but also a sentence associated with the question. We will therefore use the `AcceptabilityJudgement` Controller, which allows for the inclusion of both sentences and questions arguments, and use binary forced choice options instead of a 7 point scale.
 * The third element: `{ArgumentsToControllers}`. This is a list specifying the values of the arguments called for by the Controller above. Different types of Controllers call for different types of obligatory arguments. Consult the documentation in the [official manual](https://github.com/addrummond/ibex/blob/master/docs/manual.md) to check which arguments a given Controller calls for. The `AcceptabilityJudgement` Controller, for instance, calls for values of `s` (the sentence), `q` (the question), and `as: ["", "", ...]` (the scale or the options that will function as answer choices to the questions).
@@ -50,55 +48,50 @@ We'll now fill in this empty matrix, first with a list of possible trials. The s
 Here is an example of an element in the `items` list, which instantiates a specific condition-item pair (i.e.,~a potential trial). Proper indentations facilitate easy recognition of the components that make up the element, so change lines and introduce tab spaces in appropriate junctures.
 
 ```
-[["main-PNQ-NPF", 1], "AcceptabilityJudgment", {
-    s: "(민우가) 이모를 부르지 않았니?", 
-    q: "화자(질문자)가 다음과 같이 생각하고 있을 확률은?: 민우가 이모를 불렀다."
-    as: ["1", "2", "3", "4", "5", "6", "7"]
+[["main-every-yesres", 1], "AcceptabilityJudgment", {
+    s: "A maid polished every mirror spotless.", 
+    q: "Please click on the more likely interpretation of the sentence."
+    as: ["Each mirror was polished by a possibly different maid.", 
+        "All the mirrors were polished by the same maid."]
         }
-    presentAsScale: true,
-    leftComment: "(전혀 없음)", rightComment: "(매우 높음)"
     ]
 ```
 
-Each item (in this case, item 1), is associated with 3 target conditions and 1 control trial, though given the current experiment design, a given participant will see the item instantiated in only one of the 4 possible instantiations. Create the rest of the 3 additional condition-item pairs for item 1 and add them in the `items` matrix, making sure to put a comma between these potential trials. (Consult the handout for a list of stimuli.) Your `items` variable should now look as follows: 
+Each item (in this case, item 1), is associated with 4 conditions, though given the current experiment design, a given participant will see the item instantiated in only one of the 4 possible conditions. Create the rest of the 3 additional condition-item pairs for item 1 and add them in the `items` matrix, making sure to put a comma between these potential trials. (Consult `stimuli-list.txt`.) Your `items` variable should now look as follows: 
 
 ```
 var items = [
 
-    [["main-PNQ-NPF", 1], "AcceptabilityJudgment", {
-        s: "(민우가) 이모를 부르지 않았니?", 
-        q: "화자(질문자)가 다음과 같이 생각하고 있을 확률은?: 민우가 이모를 불렀다.",
-        as: ["1", "2", "3", "4", "5", "6", "7"],
-        presentAsScale: true,
-        leftComment: "(전혀 없음)", rightComment: "(매우 높음)"
-            }        
-        ],
-
-    [["main-PNQ-POLF", 1], "AcceptabilityJudgment", {
-        s: "민우가 이모를 부르지 (않았니)?", 
-        q: "화자(질문자)가 다음과 같이 생각하고 있을 확률은?: 민우가 이모를 불렀다.",
-        as: ["1", "2", "3", "4", "5", "6", "7"],
-        presentAsScale: true,
-        leftComment: "(전혀 없음)", rightComment: "(매우 높음)"
+    [["main-every-yesres", 1], "AcceptabilityJudgment", {
+        s: "A maid polished every mirror spotless.", 
+        q: "Please click on the more likely interpretation of the sentence.",
+        as: ["Each mirror was polished by a possibly different maid until it was spotless.", 
+            "All the mirrors were polished by the same maid until they were spotless."]
             }
         ],
 
-    [["main-PQ-NPF", 1], "AcceptabilityJudgment", {
-        s: "(민우가) 이모를 불렀니?", 
-        q: "화자(질문자)가 다음과 같이 생각하고 있을 확률은?: 민우가 이모를 불렀다.",
-        as: ["1", "2", "3", "4", "5", "6", "7"],
-        presentAsScale: true,
-        leftComment: "(전혀 없음)", rightComment: "(매우 높음)"
+    [["main-every-nores", 1], "AcceptabilityJudgment", {
+        s: "A maid polished every mirror.", 
+        q: "Please click on the more likely interpretation of the sentence.",
+        as: ["Each mirror was polished by a possibly different maid.", 
+            "All the mirrors were polished by the same maid."]
+            }
+        ], 
+
+    [["main-each-yesres", 1], "AcceptabilityJudgment", {
+        s: "A maid polished each mirror spotless.",
+        q: "Please click on the more likely interpretation of the sentence.",
+        as: ["Each mirror was polished by a possibly different maid until it was spotless.", 
+            "All the mirrors were polished by the same maid until they were spotless."]
             }
         ],
 
-    [["main-PQ-POLF", 1], "AcceptabilityJudgment", {
-        s: "민우가 이모를 (불렀니)?",  
-        q: "화자(질문자)가 다음과 같이 생각하고 있을 확률은?: 민우가 이모를 불렀다.",
-        as: ["1", "2", "3", "4", "5", "6", "7"],
-        presentAsScale: true,
-        leftComment: "(전혀 없음)", rightComment: "(매우 높음)"
-            }        
+    [["main-each-nores", 1], "AcceptabilityJudgment", {
+        s: "A maid polished each mirror.",  
+        q: "Please click on the more likely interpretation of the sentence.",
+        as: ["Each mirror was polished by a possibly different maid.", 
+            "All the mirrors were polished by the same maid."]
+            }
         ]
 
     ];
@@ -118,12 +111,8 @@ Here's an example of a filler element, added to the `items` list. In the `Filler
 
 ```
 ["filler-good1-01", "AcceptabilityJudgment", {
-    s: "(혜주가) 밥을 먹었어.", 
-    q: "화자(질문자)가 다음과 같이 생각하고 있을 확률은?: 혜주가 밥을 먹었다.",
-    as: ["1", "2", "3", "4", "5", "6", "7"],
-    presentAsScale: true,
-    leftComment: "(전혀 없음)", rightComment: "(매우 높음)"
-        }
+    s: "Only one boy enjoyed the show on the beach.",
+    as: ["Nobody but one boy enjoyed the show on the beach.", "Nobody enjoyed the show on the beach."]}
     ]
 ```
 
@@ -144,55 +133,55 @@ var defaults = [
 ];
 ```
 
-For instance, we can designate the default for the `as` argument and `comment` argument of `AcceptabilityJudgement` as follows, and get rid of these variables in the main `items` section. Your script should now look something like this:
+For instance, we can designate the default for the `q` argument of `AcceptabilityJudgement` as follows, and get rid of the `q` variable in the main `items` section. Your script should now look something like this:
 
 ```
 var defaults = [
     "AcceptabilityJudgment", {
-        as: ["1", "2", "3", "4", "5", "6", "7"],
-        presentAsScale: true,
-        leftComment: "(전혀 없음)", rightComment: "(매우 높음)"
+        q: "Please choose the more likely interpretation."
     }
 ];
 
 
 var items = [
 
-    [["main-PNQ-NPF", 1], "AcceptabilityJudgment", {
-        s: "(민우가) 이모를 부르지 않았니?", 
-        q: "화자(질문자)가 다음과 같이 생각하고 있을 확률은?: 민우가 이모를 불렀다."
-            }        
-        ],
-
-    [["main-PNQ-POLF", 1], "AcceptabilityJudgment", {
-        s: "민우가 이모를 부르지 (않았니)?", 
-        q: "화자(질문자)가 다음과 같이 생각하고 있을 확률은?: 민우가 이모를 불렀다."
+    [["main-every-yesres", 1], "AcceptabilityJudgment", {
+        s: "A maid polished every mirror spotless.", 
+        as: ["Each mirror was polished by a possibly different maid until it was spotless.", 
+            "All the mirrors were polished by the same maid until they were spotless."]
             }
         ],
 
-    [["main-PQ-NPF", 1], "AcceptabilityJudgment", {
-        s: "(민우가) 이모를 불렀니?", 
-        q: "화자(질문자)가 다음과 같이 생각하고 있을 확률은?: 민우가 이모를 불렀다."
+    [["main-every-nores", 1], "AcceptabilityJudgment", {
+        s: "A maid polished every mirror.", 
+        as: ["Each mirror was polished by a possibly different maid.", 
+            "All the mirrors were polished by the same maid."]
+            }
+        ], 
+
+    [["main-each-yesres", 1], "AcceptabilityJudgment", {
+        s: "A maid polished each mirror spotless.",
+        as: ["Each mirror was polished by a possibly different maid until it was spotless.", 
+            "All the mirrors were polished by the same maid until they were spotless."]
             }
         ],
 
-    [["main-PQ-POLF", 1], "AcceptabilityJudgment", {
-        s: "민우가 이모를 (불렀니)?",  
-        q: "화자(질문자)가 다음과 같이 생각하고 있을 확률은?: 민우가 이모를 불렀다."
-            }        
+    [["main-each-nores", 1], "AcceptabilityJudgment", {
+        s: "A maid polished each mirror.",  
+        as: ["Each mirror was polished by a possibly different maid.", 
+            "All the mirrors were polished by the same maid."]
+            }
         ],
-
 
     ["filler-good1-01", "AcceptabilityJudgment", {
-        s: "(혜주가) 밥을 먹었어.", 
-        q: "화자(질문자)가 다음과 같이 생각하고 있을 확률은?: 혜주가 밥을 먹었다."
-            }
-        ]
+    s: "Only one boy enjoyed the show on the beach.",
+    as: ["Nobody but one boy enjoyed the show on the beach.", "Nobody enjoyed the show on the beach."]}
+    ]
 
     ];
 ```
 
-The rest is easy, though a bit space consuming. (Not really time consuming though, copy/paste will do wonders!) You do the same for the rest of the experimental items as you did for item 1, making sure that the 4 conditions appear in the same order in the `TrialConditions` spot as above (this is because the built-in Latin Square ordering generator requires this). Our mock experiment will only have 8 items (so that each condition appears exactly once in the experiment) provided in the handout. This will lead you to add 8 x 4 = 32 elements inside the `items` variable. The `data-includes` folder of our current repository contains a script `tutorial1-1.js` which includes 2 items and 2 fillers. *Your task is to complete this template so that it includes 8 items and 4 fillers.*
+The rest is easy, though a bit space consuming. (Not really time consuming though, copy/paste will do wonders!) You do the same for the rest of the experimental items as you did for item 1, making sure that the 4 conditions appear in the same order in the `TrialConditions` spot as above (this is because the built-in Latin Square ordering generator requires this). Our mock experiment will only have 4 items (so that each condition appears exactly once in the experiment) provided in `stimuli-list.txt`. This will lead you to add 4 x 4 = 16 elements inside the `items` variable. The `data-includes` folder of our current repository contains a script `tutorial1-1.js` which includes 2 items and 2 fillers. *Your task is to complete this template so that it includes 4 items and 4 fillers.*
 
 
 ## 3. Adding introductions and exits
