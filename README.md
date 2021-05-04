@@ -1,9 +1,9 @@
-## Seminar in Experimental Linguistics (Semantics and Pragmatics): Spring 2020
+# Seminar in Experimental Linguistics (Semantics and Pragmatics)
 
 Links to resources, tutorials, and set-ups
 
 
-# Code editors and other fundamentals
+## Code editors and other fundamentals
 
 
 * [Visual Studio Code (code editor)](https://code.visualstudio.com/)
@@ -18,7 +18,7 @@ Links to resources, tutorials, and set-ups
 
 
  
-# OpenSesame
+## OpenSesame
 
 * [OpenSesame](https://osdoc.cogsci.nl/3.2/download/)
 
@@ -26,7 +26,7 @@ Links to resources, tutorials, and set-ups
 
 
 
-# IBEX
+## IBEX
 
 
 * [IBEX Farm](http://spellout.net/ibexfarm/)
@@ -41,7 +41,7 @@ Links to resources, tutorials, and set-ups
 
 
 
-# R
+## R
 
 * [Download R: Mac](https://cran.r-project.org/bin/macosx/)
 
@@ -55,7 +55,7 @@ Links to resources, tutorials, and set-ups
 
 
 
-# Praat
+## Praat
 
 * [Download Praat: Mac](http://www.fon.hum.uva.nl/praat/download_mac.html)
 

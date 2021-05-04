@@ -46,6 +46,11 @@ p <- sum_dat %>%
   geom_bar(stat = "identity") +
   facet_grid(prosody ~ complementizer)
 
+## Adding error bars
+
+sum_dat$se = sqrt(sum_dat$perc*(1-sum_dat$perc)/sum_dat$n)
+sum_dat$uci = sum_dat$perc + 1.96*sum_dat$se
+sum_dat$lci = sum_dat$perc - 1.96*sum_dat$se
 ```
 
 
@@ -67,6 +72,8 @@ library(lmerTest)
 ## The data
 datc <- read.csv('asmt1-korean-stops.csv')
 datv <- read.csv('asmt1-korean-vowels.csv')
+
+head(datv)
 ```
 
 
@@ -76,11 +83,16 @@ Say that we want to examine if height and speaker gender is a significant predic
 A simple linear model which tests this would be as follows.
 (syntax: dependent variable ~ predictor(factor)1 + predictor(factor)2, ..., data=data)
 
+(syntax for logistic regression: glm(...family="binomial"))
+
+m2 <- glm(response ~ context, data = dat2, family = "binomial")
+
 
 ```{r}
 m1 <- lm(F0 ~ ht + sp_gender, data=datv)
 summary(m1) 
 ```
+
 
 Any other things you might want to include in the model? Try fitting models with F1, F2, and F3 as dependent variables as well.
 
@@ -91,7 +103,7 @@ summary(m2)
 m3 <- lm(F1 ~ ht + sp_gender + vtype, data=datv)
 summary(m3)
 ```
-A sample report: Speaker gender was a significant predictor of F0: male speakers elicited significantly lower F0 than female speakers (beta = -148, SE = 17, t = -8, p < .001).
+A sample report: Speaker gender was a significant predictor of F0: male speakers elicited significantly lower F0 than female speakers (beta = -128, SE = 11, t = -11, p < .001).
 
 
 # Logistic or ordinal regression
@@ -99,15 +111,17 @@ A sample report: Speaker gender was a significant predictor of F0: male speakers
 Logistic regression is the way to go when the dependent variable involves binary choices. Ordinal regression is the way to go when the dependent variable involves factor with (ordered) categorical levels (e.g., a likert scale task). Mixed effects models are often used (positing random slopes and intercepts) to explain away any pontential (unaccounted) random effects. Usually, items and participants are included as random effects.
 
 ```{r}
+
+library(ordinal)
+
 dat_jul <-
   dat %>%
   filter(complementizer == "jul1",
          complementizer == "jul2")
 
-
 dat_jul$veridicality <- as.factor(dat_jul$veridicality)
 
-m1 <- clmm(veridicality ~ prosody * verbtype + (1|item) + (1|uniqueIdentifier), data=dat_jul)
+m1 <- clmm(veridicality ~ prosody * verbtype + (1|item) + (1|subjectID), data=dat_jul)
 summary(m1)
 ```
 
