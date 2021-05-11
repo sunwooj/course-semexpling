@@ -1,6 +1,6 @@
 # IBEX Tutorial: Day 1
 
-Day 1 will cover the basics of creating simple acceptability judgement or other types of forced-choice task experiments. We will create a pilot experiment for our class project. For a comprehensive step-by step guide, please consult [Brian Dillon and Rodica Ivan's LSA tutorial](https://xlingumass.github.io/resources/LSA_Minicourse_DillonIvan.pdf). The [official IBEX manual](https://github.com/addrummond/ibex/blob/master/docs/manual.md) will also be of use.
+Day 1 will cover the basics of creating simple acceptability judgement or other types of forced-choice task experiments. We will create a pilot experiment for our class project. For a comprehensive step-by step guide, please consult [Brian Dillon and Rodica Ivan's LSA tutorial](https://xlingumass.github.io/resources/LSA_Minicourse_DillonIvan.pdf). The [official IBEX manual](https://github.com/addrummond/ibex/blob/master/docs/manual.md) will also be of use. The [UMASS tutorial](https://people.umass.edu/bwdillon/LING609/ibex_setup.html) will be of use if you are planning to implement a lexical decision task in your final project.
 
 ## 0. Getting started
 
@@ -38,11 +38,10 @@ We'll now fill in this empty matrix, first with a list of possible trials. The s
 
 * The first element: Again a matrix `[ ]`, in the case of target trials, consisting of:
     + TrialType: Is it a target or filler/control trial? We will label each as `main` and `fill`. Control trials will be matching polar interrogatives without 
-    + TrialConditions: Which experimental condition is it? Let us posit 4 key conditions (2x2) depending on the presence of preposed negation and the position of the prosodic focus. Let's label each as follows:
+    + TrialConditions: Which experimental condition is it? Let us posit 3 key conditions depending on the presence of preposed negation and the position of the prosodic focus. Let's label each as follows:
         + `PNQ-NPF`: subject, object, or verb focus (depends on the item which one will be included), preposed negation
         + `PNQ-POLF`: polarity focus, preposed negation
         + `PQ-NPF`: subject, object, or verb focus (depends on the item which one will be included), no preposed negation
-        + `PQ-POLF`: polarity focus, no preposed negation
     + ItemNum: Item number; 1, 2, 3, 4, etc.
 * The second element: `ControllerType`. Here you specify the type of Controller you want to use, which will implement the main task in the trial. Commonly used Controllers in offline experiments are `AcceptabilityJudgement` (often used for implementing naturalness rating tasks involving a series of sentences) and `Question` (forced choice tasks). Though the main task involved in the present experiment is a binary forced-choice task, it calls for not just a question/answer pair, but also a sentence associated with the question. We will therefore use the `AcceptabilityJudgement` Controller, which allows for the inclusion of both sentences and questions arguments, and use binary forced choice options instead of a 7 point scale.
 * The third element: `{ArgumentsToControllers}`. This is a list specifying the values of the arguments called for by the Controller above. Different types of Controllers call for different types of obligatory arguments. Consult the documentation in the [official manual](https://github.com/addrummond/ibex/blob/master/docs/manual.md) to check which arguments a given Controller calls for. The `AcceptabilityJudgement` Controller, for instance, calls for values of `s` (the sentence), `q` (the question), and `as: ["", "", ...]` (the scale or the options that will function as answer choices to the questions).
@@ -52,15 +51,16 @@ Here is an example of an element in the `items` list, which instantiates a speci
 ```
 [["main-PNQ-NPF", 1], "AcceptabilityJudgment", {
     s: "(민우가) 이모를 부르지 않았니?", 
-    q: "화자(질문자)가 다음과 같이 생각하고 있을 확률은?: 민우가 이모를 불렀다."
-    as: ["1", "2", "3", "4", "5", "6", "7"]
-        }
+    q: "화자(질문자)가 다음과 같이 생각하고 있을 확률은?: 민우가 이모를 불렀다.",
+    as: ["1", "2", "3", "4", "5", "6", "7"],
     presentAsScale: true,
     leftComment: "(전혀 없음)", rightComment: "(매우 높음)"
+        }
+
     ]
 ```
 
-Each item (in this case, item 1), is associated with 3 target conditions and 1 control trial, though given the current experiment design, a given participant will see the item instantiated in only one of the 4 possible instantiations. Create the rest of the 3 additional condition-item pairs for item 1 and add them in the `items` matrix, making sure to put a comma between these potential trials. (Consult the handout for a list of stimuli.) Your `items` variable should now look as follows: 
+Each item (in this case, item 1), is associated with 3 target conditions and 1 control trial, though given the current experiment design, a given participant will see the item instantiated in only one of the 3 possible instantiations. Create the rest of the 3 additional condition-item pairs for item 1 and add them in the `items` matrix, making sure to put a comma between these potential trials. (Consult the handout for a list of stimuli.) Your `items` variable should now look as follows: 
 
 ```
 var items = [
@@ -90,15 +90,6 @@ var items = [
         presentAsScale: true,
         leftComment: "(전혀 없음)", rightComment: "(매우 높음)"
             }
-        ],
-
-    [["main-PQ-POLF", 1], "AcceptabilityJudgment", {
-        s: "민우가 이모를 (불렀니)?",  
-        q: "화자(질문자)가 다음과 같이 생각하고 있을 확률은?: 민우가 이모를 불렀다.",
-        as: ["1", "2", "3", "4", "5", "6", "7"],
-        presentAsScale: true,
-        leftComment: "(전혀 없음)", rightComment: "(매우 높음)"
-            }        
         ]
 
     ];
@@ -192,7 +183,7 @@ var items = [
     ];
 ```
 
-The rest is easy, though a bit space consuming. (Not really time consuming though, copy/paste will do wonders!) You do the same for the rest of the experimental items as you did for item 1, making sure that the 4 conditions appear in the same order in the `TrialConditions` spot as above (this is because the built-in Latin Square ordering generator requires this). Our mock experiment will only have 8 items (so that each condition appears exactly once in the experiment) provided in the handout. This will lead you to add 8 x 4 = 32 elements inside the `items` variable. The `data-includes` folder of our current repository contains a script `tutorial1-1.js` which includes 2 items and 2 fillers. *Your task is to complete this template so that it includes 8 items and 4 fillers.*
+The rest is easy, though a bit space consuming. (Not really time consuming though, copy/paste will do wonders!) You do the same for the rest of the experimental items as you did for item 1, making sure that the 3 conditions appear in the same order in the `TrialConditions` spot as above (this is because the built-in Latin Square ordering generator requires this). Our mock experiment will only have 6 items (so that each condition appears exactly twice in the experiment) provided in the handout. This will lead you to add 6 x 3 = 18 elements inside the `items` variable. *Your task is to create a .js file so that it includes 6 items and 4 fillers.*
 
 
 ## 3. Adding introductions and exits
@@ -311,15 +302,15 @@ You then specify the trial structure in the `items` variable in exactly the same
 ```
 [["main-pall-ssome", 1], "MyController1",
     {
-        html: "<center><img src='https://sunwooj.github.io/course-exsemprag/IBEX/images/sleep-all.png' alt='imagefile' width='480'></center>",
+        html: "<center><img src='https://sunwooj.github.io/course-semexpling/IBEX/images/sleep-some.png' alt='imagefile' width='480'></center>",
         s: "Some animals are sleeping."
     }
 ],
 
-[["main-pall-sall", 1], "MyController1",
+[["main-pall-sall", 2], "MyController1",
     {
-        html: "<center><img src='https://sunwooj.github.io/course-exsemprag/IBEX/images/sleep-all.png' alt='imagefile' width='480'></center>",
-        s: "All animals are sleeping."
+        html: "<center><img src='https://sunwooj.github.io/course-semexpling/IBEX/images/sleep-all.png' alt='imagefile' width='480'></center>",
+        s: "Some animals are sleeping."
     }
 ]
 ```
